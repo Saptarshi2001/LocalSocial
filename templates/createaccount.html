@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<title>Socialtool</title>
+<link href='https://fonts.googleapis.com/css?family=Inknut Antiqua' rel='stylesheet'>
+<style>
+    body {
+			font-family: Arial, sans-serif;
+			background-color: #FBF4F4;
+		}
+		
+		h1 {
+			color: #333;
+			text-align: left;
+			font-family:'Inknut Antiqua';
+			margin-left: 20px;
+			margin-bottom: 40px;
+			
+		}
+		
+		
+		
+		label {
+			display: block;
+			margin-bottom: 10px;
+			margin-left: 20px;
+			font-weight: bold;
+		}
+		
+		input[type="text"], input[type="email"], input[type="password"] {
+			width: 30%;
+			height: 40px;
+			margin-bottom: 20px;
+			margin-left: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		}
+		
+		input[type="submit"] {
+			width: 10%;
+			height: 40px;
+			background-color: #131413;
+			color: #fff;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		
+		input[type="submit"]:hover {
+			background-color: #131413;
+
+		}
+		
+		a {
+			text-decoration: none;
+			color:#f5f8f5;
+		}
+		
+		a:hover {
+			color: #d7dbd7;
+		}
+		.nav {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 20px;
+    }
+		.nav button {
+			width: 100%;
+			height: 40px;
+			color: #fff;
+			background-color: #131413;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-right: 30px;
+			margin-top: 30px;
+    }
+    .nav button:hover {
+        background-color: #272927;
+    }
+</style>
+</header>
+<body>
+<h1>Create your account </h1>
+<form action='/create' method='POST'>
+<label for="first_name">Enter your first name:</label>
+<input type='text' name='first_name' placeholder="Enter first name" autocomplete="off"><br><br>
+<label for="first_name">Enter your last name:</label>
+<input type='text' name='last_name' placeholder="Enter last name" autocomplete="off"><br><br>
+<label for="first_name">Enter your email:</label>
+<input type='email' name='email' placeholder="Enter email" autocomplete="off"><br><br>
+<label for="first_name">Enter your username:</label>
+<input type='text' name='Username' placeholder="Enter username" autocomplete="off"><br><br>
+<label for="first_name">Enter your password:</label>
+<input type='password' name='Password' placeholder="Enter password" autocomplete="new-password"><br><br>
+<input type='submit' name='create_account'>
+
+</form>
+<div class="nav">
+	<button><a href="{{url_for('login')}}">Login</a></button>
+</div>
+</body>
+</html>
+

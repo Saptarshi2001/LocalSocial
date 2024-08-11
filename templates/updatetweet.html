@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<header>
+<title>Socialtool</title>
+<link href='https://fonts.googleapis.com/css?family=Inknut Antiqua' rel='stylesheet'>
+<style>
+    body {
+			font-family: Arial, sans-serif;
+			background-color: #FBF4F4;
+		}
+		
+		h1 {
+			color: #333;
+			text-align: left;
+			font-family:'Inknut Antiqua';
+			margin-left: 20px;
+			margin-bottom: 40px;
+		}
+		
+		
+		textarea {
+			width: 40%;
+			height: 200px;
+			margin-bottom: 20px;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			resize: vertical;
+			margin-left: 20px;
+		}
+		
+		input[type="submit"] {
+			width: 10%;
+			height: 40px;
+			background-color: #131413;
+			color: #fff;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			margin-left: 20px;
+		}
+		
+		input[type="submit"]:hover {
+			background-color: #2b2d2b;
+		}
+</style>
+</header>
+<body>
+    <h1>Update the tweet </h1>
+    <form action="{{ url_for('update', postid=postid) }}" method="POST">
+        <input type="hidden" name="postid" value="{{ postid }}">
+        <textarea name="tweet" id="tweet" rows="10" cols="100">{{ post_body }}</textarea><br>
+        <input type="submit" value="Edit Tweet" id="edit">
+    </form>
+</body>
+</html>
+
+

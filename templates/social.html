@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<header>
+<link href='https://fonts.googleapis.com/css?family=Irish Grover' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Inknut Antiqua' rel='stylesheet'>
+<title>Socialtool</title>
+<style>
+    h1
+    {
+        color: black;
+        margin-left: 20px;
+        font-size: 70px;
+        margin-top: 10px;
+        font-family: 'Irish Grover';
+    }
+
+    h3
+    {
+        color: black;
+        margin-left: 20px;
+        margin-top: 110px;
+        font-size: 30px;
+        font-family:'Inknut Antiqua';
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    body
+    {
+        background-color: #FBF4F4;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    
+    .nav {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 20px;
+    }
+    .nav button {
+        width: 150px;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        background-color: #161616;
+        color: white;
+        font-size: 19px;
+        cursor: pointer;
+        margin: 10px;
+    }
+    .nav button:hover {
+        background-color: #141514;
+    }
+    .get-started {
+        width: 180px;
+        height: 60px;
+        border: none;
+        border-radius: 5px;
+        background-color: #101110;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+        margin-left: 20px;
+        display: block;
+    }
+    .get-started:hover {
+        background-color: #151615;
+    }
+    a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
+</header>
+<body>
+<h1>LocalSocial </h1>
+<h3>A local first self hosted open source tool to manage all of<br> 
+    your social media activities . </h3>
+<div class="nav">
+   <button><a href="{{url_for('create_account')}}">Sign Up</a></button>
+    <button><a href="{{url_for('login')}}">Login</a></button>
+</div>
+<button class="get-started"><a href="{{url_for('create_account')}}">Get started</a></button>
+</body>
+</html>
+
