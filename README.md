@@ -49,7 +49,7 @@ Platforms like Linkedin,~~reddit~~,facebook,hacker news will soon be added.
 There's honestly a lot of things to improve on this software.Here are the ones that will be the key focus as of now:-
 
 - A message queue to schedule posts for a specific time and date
-- Support on platforms such as Linkedin,~~reddit~~ and facebook
+- Support on platforms such as Linkedin,~~reddit~~,facebook,hacker news
 - Improving the ui by creating a seperate page that shows all the posts being posted
 
 # Contributing
