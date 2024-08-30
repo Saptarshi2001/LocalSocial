@@ -1,12 +1,17 @@
 # LocalSocial
 LocalSocial is an open source self hosted tool that takes care of all your social media activities under one place.From posting to editing to scheduling on different platforms,you get to do all of these activities by self hosting it right on your local environment.
 
-As of now, LocalSocial can work with twitter on which you get to:-
+ LocalSocial  works with twitter on which you get to:-
 - create tweets 
 - delete tweets
 - edit tweets
 
-Platforms like Linkedin,reddit,facebook will soon be added.
+ LocalSocial now works with reddit on which you can get to:-
+ - submit posts on your subreddits
+ - edit the posts
+ - delete the posts
+
+Platforms like Linkedin,~~reddit~~,facebook,hacker news will soon be added.
 
 # Requirements
 - Python 3.6 or higher
@@ -25,6 +30,17 @@ Platforms like Linkedin,reddit,facebook will soon be added.
     access_token=access_token,
     access_token_secret=access_secret
 )`
+- - Go to the [reddit developer platform](https://www.reddit.com/dev/api/) 
+- Get the credentials of your application  for authorization such as client_id,client_secret,username and reddit password
+- create a setup.py file and put these credentials over there.
+- use these credentials to create the reddit client `reddit=praw.Reddit(client_id=client_id,
+            client_secret=client_secret,
+            user_agent=user_agent,
+            username=username,
+            password=password
+            )
+`
+- 
 - Go to the terminal and enter `flask --app LocalSocial run`
 - Go to the browser and enter `127.0.0.1:5000/socials` and you get 
 

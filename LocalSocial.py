@@ -7,7 +7,7 @@ from flask import render_template
 from flask import make_response
 from flask import abort, redirect, url_for
 import praw.exceptions
-from setup import consumer_key,consumer_secret,bearer_token,access_secret,access_token,client_id,client_secret,redirect_uri,user_agent,password
+from setup import consumer_key,consumer_secret,bearer_token,access_secret,access_token,username,client_id,client_secret,redirect_uri,user_agent,password
 import datetime
 import argon2
 import tweepy
@@ -27,7 +27,7 @@ api = tweepy.Client(
 reddit=praw.Reddit(client_id=client_id,
             client_secret=client_secret,
             user_agent=user_agent,
-            username="DegreeLazy719",
+            username=username,
             password=password
             )
 
