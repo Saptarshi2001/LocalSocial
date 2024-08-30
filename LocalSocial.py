@@ -6,35 +6,33 @@ from flask import request
 from flask import render_template
 from flask import make_response
 from flask import abort, redirect, url_for
-from setup import consumer_key,consumer_secret,bearer_token,access_secret,access_token
+import praw.exceptions
+from setup import consumer_key,consumer_secret,bearer_token,access_secret,access_token,client_id,client_secret,redirect_uri,user_agent,password
 import datetime
 import argon2
 import tweepy
 import uuid
 import sqlite3
-
+import praw
+from createdb import init_db,close_db
 app=Flask(__name__,template_folder='templates')
 api = tweepy.Client(
     bearer_token=bearer_token,
     consumer_key=consumer_key,
     consumer_secret=consumer_secret,
     access_token=access_token,
-    access_token_secret=access_secret
+    access_token_secret=access_secret,
+
 )
+reddit=praw.Reddit(client_id=client_id,
+            client_secret=client_secret,
+            user_agent=user_agent,
+            username="DegreeLazy719",
+            password=password
+            )
 
 
-def init_db():
-    db=sqlite3.connect('database.db')
-    db.row_factory = sqlite3.Row
-    if db is not None:
-        return
-    with open('user.sql') as usr:
-        db.executescript(usr.read())
-    
-    db.close()
 
-def close_db(db):
-    db.close()
 
 @app.route('/socials',methods=['POST','GET'])
 def socials():
@@ -72,6 +70,43 @@ def homepage(username):
                 return '<p>Not a proper tweet</p>'
         else:
             return render_template('homepage.html',username=username)
+
+@app.route('/homepage/reddit/<username>',methods=['POST','GET'])
+def homepagereddit(username):
+    
+
+    if request.method=='POST':
+        print("hello")
+        sub=request.form['subreddit']    
+        subreddit=reddit.subreddit(sub)
+        title=request.form['heading']
+        body=request.form['reddit']
+        if title.isascii() and body.isascii():
+            dbconnect=sqlite3.connect("database.db")
+            cursors=dbconnect.cursor()
+            try:
+                
+                submission=subreddit.submit(title,body)
+                postid=submission.id
+            
+
+            except praw.exceptions.PRAWException as e:
+                print(f"Exception {e}")
+                return None
+
+            cursors.execute("INSERT INTO REDDITPOST(POST_ID,POST_NAME,POST_BODY,USERNAME) VALUES(?,?,?,?)",(postid,title,body,username))
+            cursors.execute("INSERT INTO CREATIONREDDIT(POSTDATE,USERNAME,POSTID) VALUES(?,?,?)",(datetime.datetime.now(),username,postid))
+            close_db()
+            return render_template("success.html")
+            
+
+        return render_template("homereddit.html",username=username)
+    else:
+        return render_template("homereddit.html",username=username)
+    
+    
+
+
 
 @app.route('/delete',methods=['POST','GET'])
 def delete():
@@ -124,6 +159,31 @@ def edit_post():
             return "<p>Post name not valid </p>"
     else:
         return render_template('update.html')
+    
+@app.route('/editreddit',methods=['POST','GET'])
+def edit_post_reddit():
+    if request.method=='POST':
+        post_name=request.form['post_name']
+        if post_name.isascii():
+            dbconnect=sqlite3.connect("database.db")
+            cursors=dbconnect.cursor()
+            cursors.execute('SELECT POST_ID, POST_BODY FROM REDDITPOST WHERE POST_NAME=?', (post_name,))
+            acc=cursors.fetchone()
+            if acc:
+                postid,post_body=acc
+                print(postid)
+                print(post_body)                  
+                dbconnect.commit()
+                close_db(dbconnect)
+                return redirect(url_for('updateredditpost', postid=postid) + '?post_body=' + post_body)
+                
+            close_db(dbconnect)            
+            return render_template('<p>Post not found</p>')
+        else:
+            close_db(dbconnect)
+            return "<p>Post name not valid </p>"
+    else:
+        return render_template('update.html')
 
 
 @app.route('/update/<postid>', methods=['POST', 'GET'])
@@ -141,6 +201,32 @@ def update(postid):
             cursors.execute("UPDATE POST SET POST_BODY=? WHERE POST_ID=? ",(newbody,postid))
             dbconnect.commit()
             close_db(dbconnect)
+            api.delete_tweet(postid)
+            api.create_tweet(newbody)
+            
+            return '<p>Post edited</p>'
+                 
+        else:
+            return '<p>Not a valid body </p>'
+    
+    else:
+        return render_template("updatetweet.html",postid=postid,post_body=post_body)
+    
+@app.route('/updatereddit/<postid>', methods=['POST', 'GET'])
+def updateredditpost(postid):
+    print(postid)
+    post_body=request.args.get('post_body')
+    
+    if request.method=='POST':
+        
+        newbody=request.form['reddit']
+        
+        if newbody.isascii():
+            dbconnect=sqlite3.connect("database.db")
+            cursors=dbconnect.cursor()
+            cursors.execute("UPDATE REDDITPOST SET POST_BODY=? WHERE POST_ID=? ",(newbody,postid))
+            dbconnect.commit()
+            close_db(dbconnect)
             api.delete_tweet(id=postid)
             api.create_tweet(text=newbody)
             
@@ -153,7 +239,9 @@ def update(postid):
         return render_template("updatetweet.html",postid=postid,post_body=post_body)
 
 
-
+@app.route('/options/<username>',methods=['POST','GET'])
+def options(username):
+    return render_template("options.html",username=username)
 
 @app.route('/create',methods=['POST','GET'])
 def create_account():
@@ -199,7 +287,7 @@ def login():
         close_db(dbconnect)
         
         if acc:
-            return redirect(url_for('homepage',username=username))
+            return redirect(url_for('options',username=username))
         else:
             
             return '<p> Account not present.Please create an account</p>'
@@ -212,4 +300,3 @@ def logout():
 
     return render_template('login.html')
 
-init_db()
