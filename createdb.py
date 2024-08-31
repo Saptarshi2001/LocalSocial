@@ -9,7 +9,6 @@ def init_db():
     
     db.close()
 
-def close_db(db):
-    db.close()
+
 
 init_db()
