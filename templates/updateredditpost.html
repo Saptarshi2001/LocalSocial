@@ -4,8 +4,7 @@
 <title>Socialtool</title>
 <link href='https://fonts.googleapis.com/css?family=Inknut Antiqua' rel='stylesheet'>
 <style>
-    
-		body {
+    body {
 			font-family: Arial, sans-serif;
 			background-color: #FBF4F4;
 		}
@@ -16,19 +15,18 @@
 			font-family:'Inknut Antiqua';
 			margin-left: 20px;
 			margin-bottom: 40px;
-
 		}
 		
 		
-		
-		input[type="text"] {
-			width: 30%;
-			height: 20px;
+		textarea {
+			width: 40%;
+			height: 200px;
 			margin-bottom: 20px;
-			margin-left: 20px;
 			padding: 10px;
 			border: 1px solid #ccc;
 			border-radius: 5px;
+			resize: vertical;
+			margin-left: 20px;
 		}
 		
 		input[type="submit"] {
@@ -44,17 +42,16 @@
 		}
 		
 		input[type="submit"]:hover {
-			background-color: #2c2e2c;
+			background-color: #2b2d2b;
 		}
-		
-		
 </style>
 </header>
 <body>
-<h1>Search for the tweet</h1>
-<form action='/edit' method='POST'>
-<input type="text" name="post_name" id="post_name" placeholder="Enter the title of the tweet "><br>
-<input type="submit" name="tweet_submitted" value="Search tweet" >
-</form>
+    <h1>Update the reddit post </h1>
+    <form action="{{ url_for('update', postid=postid) }}" method="POST">
+        <input type="hidden" name="postid" value="{{ postid }}">
+        <textarea name="reddit" id="reddit" rows="10" cols="100">{{ post_body }}</textarea><br>
+        <input type="submit" value="Edit post" id="edit">
+    </form>
 </body>
 </html>

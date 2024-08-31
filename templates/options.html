@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<header>
+<title>Socialtool</title>
+<link href='https://fonts.googleapis.com/css?family=Inknut Antiqua' rel='stylesheet'>
+<style>
+    body {
+			font-family: Arial, sans-serif;
+			background-color: #FBF4F4;
+		}
+		
+		h1 {
+			color: #333;
+			text-align: left;
+			font-family:'Inknut Antiqua';
+			margin-left: 20px;
+			margin-bottom: 40px;
+		}
+		
+		
+		
+		.medias {
+            position: relative;
+            width: 300px;
+            margin-left: 20px;
+        }
+
+        .medias::after {
+            content: '\25BC';
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #007bff;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            appearance: none;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover, select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        /* Hide default arrow in IE */
+        select::-ms-expand {
+            display: none;
+        }
+
+        /* Style for the placeholder option */
+        select option:first-child {
+            color: #757575;
+        }
+
+        /* Style for the actual options */
+        select option:not(:first-child) {
+            color: #333;
+        }
+		
+
+
+</style>
+</header>
+<body>
+<h1>Choose the platform</h1>
+
+<div class="medias">
+    <select onchange="window.location.href=this.value;"  name="socials" id="socials">
+        <option value="{{ url_for('homepage', username=username) }}">Twitter</option>
+        <option value="{{ url_for('homepagereddit', username=username) }}">Reddit</option>
+    </select>
+    
+</div>
+</select>
+</body>
+</html>

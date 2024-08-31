@@ -101,16 +101,17 @@ body {
 </style>
 </header>
 <body>
-<h1>Tweet right from here</h1>
-<form action="{{url_for('homepage',username=username)}}" method='POST'>
-<input type="text" name="heading" id="heading"  placeholder="Enter the title of the tweet"><br><br>
-<textarea name="twitter" id="tweet" rows=10 cols=100 placeholder="Enter your tweet"></textarea>
+<h1>Post on reddit from here</h1>
+<form action="{{url_for('homepagereddit',username=username)}}" method='POST'>
+<input type="text" name="heading" id="heading"  placeholder="Enter the title of the post"><br><br>
+<input type="text" name="subreddit" id="subreddit" placeholder="Enter the name of the subreddit"><br><br>
+<textarea name="reddit" id="tweet" rows=10 cols=100 placeholder="Enter your post"></textarea>
 <br>
 <br><br>
-<input type="submit" name="tweet_submitted" value="create tweet">
+<input type="submit" name="tweet_submitted" value="create post">
 </form>
-<button><a href="{{url_for('edit_post')}}">Edit tweet</a></button>
-<button><a href="{{url_for('delete')}}">Delete tweet</a></button>
+<button><a href="{{url_for('edit_post_reddit')}}">Edit post</a></button>
+<button><a href="{{url_for('deletepost')}}">Delete post</a></button>
 <div class="nav">
 	<button><a href="{{url_for('logout')}}">Logout</a></button>
 </div>

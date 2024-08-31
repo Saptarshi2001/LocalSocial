@@ -50,7 +50,7 @@
     <h1>Update the tweet </h1>
     <form action="{{ url_for('update', postid=postid) }}" method="POST">
         <input type="hidden" name="postid" value="{{ postid }}">
-        <textarea name="tweet" id="tweet" rows="10" cols="100">{{ post_body }}</textarea><br>
+        <textarea name="twitter" id="twitter" rows="10" cols="100">{{ post_body }}</textarea><br>
         <input type="submit" value="Edit Tweet" id="edit">
     </form>
 </body>
