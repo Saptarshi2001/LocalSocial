@@ -29,8 +29,10 @@ Platforms like Linkedin,~~reddit~~,facebook,hacker news will soon be added.
     consumer_secret=consumer_secret,
     access_token=access_token,
     access_token_secret=access_secret
+
 )`
-- - Go to the [reddit developer platform](https://www.reddit.com/dev/api/) 
+- Create the table using the command `python createdb.py`
+-  Go to the [reddit developer platform](https://www.reddit.com/dev/api/) 
 - Get the credentials of your application  for authorization such as client_id,client_secret,username and reddit password
 - create a setup.py file and put these credentials over there.
 - use these credentials to create the reddit client `reddit=praw.Reddit(client_id=client_id,
