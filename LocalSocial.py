@@ -14,7 +14,7 @@ import tweepy
 import uuid
 import sqlite3
 import praw
-from createdb import init_db,close_db
+#from createdb import close_db
 app=Flask(__name__,template_folder='templates')
 api = tweepy.Client(
     bearer_token=bearer_token,
@@ -92,11 +92,13 @@ def homepagereddit(username):
 
             except praw.exceptions.PRAWException as e:
                 print(f"Exception {e}")
+                
                 return None
 
             cursors.execute("INSERT INTO REDDITPOST(POST_ID,POST_NAME,POST_BODY,USERNAME) VALUES(?,?,?,?)",(postid,title,body,username))
             cursors.execute("INSERT INTO CREATIONREDDIT(POSTDATE,USERNAME,POSTID) VALUES(?,?,?)",(datetime.datetime.now(),username,postid))
-            close_db()
+            dbconnect.commit()
+            dbconnect.close()
             return render_template("success.html")
             
 
@@ -119,7 +121,7 @@ def delete():
         if acc:
             cursors.execute('DELETE FROM POST WHERE POST_NAME=?',(post_name,))
             dbconnect.commit()
-            close_db(dbconnect)
+            dbconnect.close()
             id=int(''.join(map(str,acc)))
             try:
                 api.delete_tweet(id)
@@ -128,12 +130,36 @@ def delete():
             except tweepy.TweepyException as e:
                     return render_template(e)
                     
+@app.route('/deletepost',methods=['POST','GET'])
+def deletepost():
+    if request.method=='POST':
+        title=request.form['post_name']
+        dbconnect=sqlite3.connect("database.db")
+        cursors=dbconnect.cursor()
+        cursors.execute('SELECT POST_ID FROM REDDITPOST WHERE POST_NAME=?',(title,))
+        id=cursors.fetchone() 
+        if id:
+            try:
+                post=reddit.submission(id[0])
+                post.delete()
+                cursors.execute('DELETE FROM REDDITPOST WHERE POST_NAME=?',(title,))
+                print("hello")
+                dbconnect.commit()
+                dbconnect.close()
+                if post.removed_by_category is not None:
+                    print("<p>Post deleted</p>")
+                    return render_template('homereddit.html')
+                
+            except praw.exceptions.PRAWException as e:
+                dbconnect.close()
+                print(f"Exception {e}")
+                    
 
 
-        close_db(dbconnect)        
+        dbconnect.close()        
         return '<p>Post doesent exists</p>'
     else:
-        return render_template('delete.html')
+        return render_template('deletepost.html')
 
 @app.route('/edit',methods=['POST','GET'])
 def edit_post():
@@ -149,13 +175,13 @@ def edit_post():
                 print(postid)
                 print(post_body)                  
                 dbconnect.commit()
-                close_db(dbconnect)
+                dbconnect.close()
                 return redirect(url_for('update', postid=postid) + '?post_body=' + post_body)
                 
-            close_db(dbconnect)            
+            dbconnect.close()            
             return render_template('<p>Post not found</p>')
         else:
-            close_db(dbconnect)
+            dbconnect.close()
             return "<p>Post name not valid </p>"
     else:
         return render_template('update.html')
@@ -170,20 +196,18 @@ def edit_post_reddit():
             cursors.execute('SELECT POST_ID, POST_BODY FROM REDDITPOST WHERE POST_NAME=?', (post_name,))
             acc=cursors.fetchone()
             if acc:
-                postid,post_body=acc
-                print(postid)
-                print(post_body)                  
+                postid,post_body=acc               
                 dbconnect.commit()
-                close_db(dbconnect)
+                dbconnect.close()
                 return redirect(url_for('updateredditpost', postid=postid) + '?post_body=' + post_body)
                 
-            close_db(dbconnect)            
+            dbconnect.close()            
             return render_template('<p>Post not found</p>')
         else:
-            close_db(dbconnect)
+            dbconnect.close()
             return "<p>Post name not valid </p>"
     else:
-        return render_template('update.html')
+        return render_template('updatepost.html')
 
 
 @app.route('/update/<postid>', methods=['POST', 'GET'])
@@ -200,7 +224,7 @@ def update(postid):
             cursors=dbconnect.cursor()
             cursors.execute("UPDATE POST SET POST_BODY=? WHERE POST_ID=? ",(newbody,postid))
             dbconnect.commit()
-            close_db(dbconnect)
+            dbconnect.close()
             api.delete_tweet(postid)
             api.create_tweet(newbody)
             
@@ -214,7 +238,7 @@ def update(postid):
     
 @app.route('/updatereddit/<postid>', methods=['POST', 'GET'])
 def updateredditpost(postid):
-    print(postid)
+    
     post_body=request.args.get('post_body')
     
     if request.method=='POST':
@@ -226,17 +250,16 @@ def updateredditpost(postid):
             cursors=dbconnect.cursor()
             cursors.execute("UPDATE REDDITPOST SET POST_BODY=? WHERE POST_ID=? ",(newbody,postid))
             dbconnect.commit()
-            close_db(dbconnect)
-            api.delete_tweet(id=postid)
-            api.create_tweet(text=newbody)
-            
+            dbconnect.close()
+            post=reddit.submission(postid)
+            post.edit(newbody)
             return '<p>Post edited</p>'
                  
         else:
             return '<p>Not a valid body </p>'
     
     else:
-        return render_template("updatetweet.html",postid=postid,post_body=post_body)
+        return render_template("updateredditpost.html",postid=postid,post_body=post_body)
 
 
 @app.route('/options/<username>',methods=['POST','GET'])
@@ -258,7 +281,7 @@ def create_account():
             cursors.execute('INSERT INTO USERS VALUES(?,?,?,?,?)',(first_name,last_name,email,username,hshpass))
             acc=cursors.fetchone()
             dbconnect.commit()
-            close_db(dbconnect)
+            dbconnect.close()
             if acc:
                 render_template("<p>Account already present</p>")
                 return redirect(url_for('login'))
@@ -284,7 +307,7 @@ def login():
         cursors.execute('SELECT USERNAME FROM USERS WHERE USERNAME=?',(username,))
         acc=cursors.fetchone()
         dbconnect.commit()
-        close_db(dbconnect)
+        dbconnect.close()
         
         if acc:
             return redirect(url_for('options',username=username))
